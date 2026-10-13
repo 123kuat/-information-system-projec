@@ -1,24 +1,26 @@
-# Student Information System
+# Кітапхана ақпараттық жүйесі
 
 ## Project Description
 
-The Student Information System is designed to manage student information efficiently.
+The Library Information System is designed to manage books, readers, and book borrowing records in a library.
 
 ## Main Features
 
-- Add student information
-- View student information
-- Update student information
-- Delete student information
+- Add new books
+- View the list of books
+- Search for books
+- Register library readers
+- Record book borrowing
+- Record book returns
 
 ## Project Structure
 
-- README.md - Project overview
+- README.md - Project description
 - docs/requirements.md - System requirements
 - docs/use-case.md - Use case description
 - docs/diagrams/ - System diagrams
 
-## Tools
+## Technologies
 
 - Git
 - GitHub
