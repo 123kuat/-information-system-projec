@@ -1,26 +1,17 @@
-# Use Case Description
+# System Requirements
 
-## Actor
+## Functional Requirements
 
-Administrator
+1. The system must allow administrators to add new books.
+2. The system must display the list of books.
+3. The system must allow users to search for books.
+4. The system must allow administrators to register readers.
+5. The system must record book borrowing.
+6. The system must record book returns.
 
-## Use Cases
+## Non-Functional Requirements
 
-### 1. Add Student
-The administrator enters student information and saves it.
-
-### 2. View Students
-The administrator views the list of students.
-
-### 3. Update Student
-The administrator edits existing student information.
-
-### 4. Delete Student
-The administrator removes student information from the system.
-
-## Main Scenario
-
-1. The administrator opens the system.
-2. The administrator selects an operation.
-3. The system processes the request.
-4. The system displays the result.
+1. The system should be easy to use.
+2. The system should store information accurately.
+3. The system should protect reader information.
+4. The system should provide reliable data management.
