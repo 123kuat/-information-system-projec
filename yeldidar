@@ -1,11 +1,9 @@
 import sqlite3
 
-# Дерекқорға қосылу
 conn = sqlite3.connect("library.db")
 cur = conn.cursor()
 
-# ========== CREATE TABLE ==========
-# 1. users кестесі (Пайдаланушылар)
+# CREATE TABLE
 cur.execute('''
 CREATE TABLE IF NOT EXISTS users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,7 +13,6 @@ CREATE TABLE IF NOT EXISTS users (
 )
 ''')
 
-# 2. admins кестесі (Әкімшілер)
 cur.execute('''
 CREATE TABLE IF NOT EXISTS admins (
     admin_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +21,6 @@ CREATE TABLE IF NOT EXISTS admins (
 )
 ''')
 
-# 3. films кестесі (Фильмдер)
 cur.execute('''
 CREATE TABLE IF NOT EXISTS films (
     film_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +31,6 @@ CREATE TABLE IF NOT EXISTS films (
 )
 ''')
 
-# 4. halls кестесі (Кинозалдар)
 cur.execute('''
 CREATE TABLE IF NOT EXISTS halls (
     hall_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,7 +39,6 @@ CREATE TABLE IF NOT EXISTS halls (
 )
 ''')
 
-# 5. sessions кестесі (Сеанстар)
 cur.execute('''
 CREATE TABLE IF NOT EXISTS sessions (
     session_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,7 +50,6 @@ CREATE TABLE IF NOT EXISTS sessions (
 )
 ''')
 
-# 6. seats кестесі (Орындар)
 cur.execute('''
 CREATE TABLE IF NOT EXISTS seats (
     seat_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,7 +60,6 @@ CREATE TABLE IF NOT EXISTS seats (
 )
 ''')
 
-# 7. orders кестесі (Тапсырыстар)
 cur.execute('''
 CREATE TABLE IF NOT EXISTS orders (
     order_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -78,7 +70,6 @@ CREATE TABLE IF NOT EXISTS orders (
 )
 ''')
 
-# 8. order_seats кестесі (Тапсырыс пен орын байланысы)
 cur.execute('''
 CREATE TABLE IF NOT EXISTS order_seats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,7 +81,7 @@ CREATE TABLE IF NOT EXISTS order_seats (
 ''')
 conn.commit()
 
-# ========== INSERT ==========
+# INSERT
 cur.execute("INSERT INTO users(name, email, phone) VALUES (?, ?, ?)",
             ("eldidar", "bazarbekeldidar@gmail.com", "+77086854326"))
 cur.execute("INSERT INTO admins(login, password) VALUES (?, ?)",
@@ -109,18 +100,17 @@ cur.execute("INSERT INTO order_seats(order_id, seat_id) VALUES (?, ?)",
             (1, 1))
 conn.commit()
 
-# ========== UPDATE ==========
+# UPDATE
 cur.execute("UPDATE users SET phone = '+77086854326' WHERE user_id = 1")
 cur.execute("UPDATE seats SET status = 'броньдалды' WHERE seat_id = 1")
 cur.execute("UPDATE orders SET status = 'қойылды' WHERE order_id = 1")
 conn.commit()
 
-# ========== DELETE ==========
+# DELETE
 cur.execute("DELETE FROM seats WHERE seat_id = 1")
 cur.execute("DELETE FROM orders WHERE order_id = 1")
 conn.commit()
 
-# Нәтиже шығару
 print("users кестесі:")
 for row in cur.execute("SELECT * FROM users"):
     print(row)
