@@ -1,0 +1,129 @@
+import sqlite3
+
+# Дерекқорға қосылу
+conn = sqlite3.connect("library.db")
+cur = conn.cursor()
+
+# ========== CREATE TABLE ==========
+# 1. users кестесі (Пайдаланушылар)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    phone TEXT
+)
+''')
+
+# 2. admins кестесі (Әкімшілер)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS admins (
+    admin_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    login TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL
+)
+''')
+
+# 3. films кестесі (Фильмдер)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS films (
+    film_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    genre TEXT,
+    duration INTEGER NOT NULL CHECK(duration > 0),
+    description TEXT
+)
+''')
+
+# 4. halls кестесі (Кинозалдар)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS halls (
+    hall_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hall_name TEXT NOT NULL,
+    total_seats INTEGER NOT NULL CHECK(total_seats > 0)
+)
+''')
+
+# 5. sessions кестесі (Сеанстар)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS sessions (
+    session_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    film_id INTEGER NOT NULL,
+    hall_id INTEGER NOT NULL,
+    start_time TEXT NOT NULL,
+    FOREIGN KEY (film_id) REFERENCES films(film_id),
+    FOREIGN KEY (hall_id) REFERENCES halls(hall_id)
+)
+''')
+
+# 6. seats кестесі (Орындар)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS seats (
+    seat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id INTEGER NOT NULL,
+    seat_number TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'бос',
+    FOREIGN KEY (session_id) REFERENCES sessions(session_id)
+)
+''')
+
+# 7. orders кестесі (Тапсырыстар)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS orders (
+    order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    order_time TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'жасалды',
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+)
+''')
+
+# 8. order_seats кестесі (Тапсырыс пен орын байланысы)
+cur.execute('''
+CREATE TABLE IF NOT EXISTS order_seats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    seat_id INTEGER NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (seat_id) REFERENCES seats(seat_id)
+)
+''')
+conn.commit()
+
+# ========== INSERT ==========
+cur.execute("INSERT INTO users(name, email, phone) VALUES (?, ?, ?)",
+            ("eldidar", "bazarbekeldidar@gmail.com", "+77086854326"))
+cur.execute("INSERT INTO admins(login, password) VALUES (?, ?)",
+            ("admin1", "admin123"))
+cur.execute("INSERT INTO films(title, genre, duration, description) VALUES (?, ?, ?, ?)",
+            ("Ғарыш сапары", "Ғылыми-фантастика", 125, "Ғарышқа саяхат туралы фильм"))
+cur.execute("INSERT INTO halls(hall_name, total_seats) VALUES (?, ?)",
+            ("Зал №1", 50))
+cur.execute("INSERT INTO sessions(film_id, hall_id, start_time) VALUES (?, ?, ?)",
+            (1, 1, "2026-10-20 18:00:00"))
+cur.execute("INSERT INTO seats(session_id, seat_number, status) VALUES (?, ?, ?)",
+            (1, "A3", "бос"))
+cur.execute("INSERT INTO orders(user_id, order_time, status) VALUES (?, ?, ?)",
+            (1, "2026-10-10 14:30:00", "жасалды"))
+cur.execute("INSERT INTO order_seats(order_id, seat_id) VALUES (?, ?)",
+            (1, 1))
+conn.commit()
+
+# ========== UPDATE ==========
+cur.execute("UPDATE users SET phone = '+77086854326' WHERE user_id = 1")
+cur.execute("UPDATE seats SET status = 'броньдалды' WHERE seat_id = 1")
+cur.execute("UPDATE orders SET status = 'қойылды' WHERE order_id = 1")
+conn.commit()
+
+# ========== DELETE ==========
+cur.execute("DELETE FROM seats WHERE seat_id = 1")
+cur.execute("DELETE FROM orders WHERE order_id = 1")
+conn.commit()
+
+# Нәтиже шығару
+print("users кестесі:")
+for row in cur.execute("SELECT * FROM users"):
+    print(row)
+
+cur.close()
+conn.close()
